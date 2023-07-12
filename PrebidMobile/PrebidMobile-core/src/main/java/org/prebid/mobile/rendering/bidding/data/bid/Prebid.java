@@ -93,7 +93,11 @@ public class Prebid {
         }
 
         Utils.addValue(prebid, "cache", cache);
-        Utils.addValue(prebid, "targeting", new JSONObject());
+
+        JSONObject targeting = new JSONObject();
+        Utils.addValue(targeting, "includewinners", PrebidMobile.getIncludeWinnersFlag());
+        Utils.addValue(targeting, "includebidderkeys", PrebidMobile.getIncludeBidderKeysFlag());
+        Utils.addValue(prebid, "targeting", targeting);
 
         if (!TargetingParams.getAccessControlList().isEmpty()) {
             JSONObject data = new JSONObject();
