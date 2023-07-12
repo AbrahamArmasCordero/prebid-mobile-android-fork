@@ -70,17 +70,22 @@ mkdir $LOGPATH
 rm -rf $TEMPDIR
 cd $LIBDIR
 ./gradlew -i --no-daemon clean >$LOGPATH/clean.log 2>&1
+echoX "Cleaning Successful"
 
 ###########################
 # Generate modules
 ###########################
 
+#modules=(
+#  "PrebidMobile"
+#  "PrebidMobile-core"
+#  "PrebidMobile-gamEventHandlers"
+#  "PrebidMobile-admobAdapters"
+#  "PrebidMobile-maxAdapters"
+#)
 modules=(
   "PrebidMobile"
   "PrebidMobile-core"
-  "PrebidMobile-gamEventHandlers"
-  "PrebidMobile-admobAdapters"
-  "PrebidMobile-maxAdapters"
 )
 
 projectPaths=(
@@ -98,7 +103,7 @@ for n in ${!modules[@]}; do
 	echoX "Assembling ${modules[$n]}"
 	cd $LIBDIR
 	# clean existing build results, exclude test task, and assemble new release build
-	(./gradlew -i --no-daemon ${modules[$n]}:assembleRelease > $LOGPATH/build.log 2>&1 || die "Build failed, check log in $LOGPATH/build.log" )
+	(./gradlew -i --no-daemon ${modules[$n]}:assembleRelease> $LOGPATH/build.log 2>&1 || die "Build failed, check log in $LOGPATH/build.log" )
 
     # Make folder generated/temp/output
 	echoX "Packaging ${modules[$n]}"
@@ -197,10 +202,10 @@ cat "$TEMPDIR/META-INF/proguard/proguard.pro~" >> "$TEMPDIR/META-INF/proguard/pr
 rm "$TEMPDIR/META-INF/proguard/proguard.pro~"
 
 rm $TEMPDIR/org/prebid/mobile/core/BuildConfig.class
-jar -cvf PrebidMobile.jar -C $TEMPDIR .
+jar -cvf PrebidMobile-fat.jar -C $TEMPDIR .
 
 mkdir $FAT_PATH
-mv PrebidMobile.jar $FAT_PATH
+mv PrebidMobile-fat.jar $FAT_PATH
 
 rm -r $TEMPDIR
 
